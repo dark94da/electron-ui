@@ -1,0 +1,40 @@
+.App {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  //background-color: #d6d6d6;
+}
+
+.input-area, .output-area {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 1rem 0;
+}
+
+.left-column {
+  width: 15%;
+
+  .label {
+    font-size: 1rem;
+  }
+}
+
+.right-column {
+  width: 65%;
+
+  .text-area {
+    width: 100%;
+    margin-bottom: .5rem;
+  }
+
+  .result-area {
+    min-height: 10rem;
+    overflow: scroll;
+  }
+
+  .export-btn {
+    margin-top: 0.8rem;
+  }
+}

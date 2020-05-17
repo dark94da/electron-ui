@@ -11,3 +11,11 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+html {
+  -webkit-text-size-adjust: none;
+  font-size: calc(100vw / 3.75 / 8);
+  @media only screen and (min-width: 768px) {
+    font-size: 768px/3.75;
+  }
+}
