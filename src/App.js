@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TextField, Button } from '@material-ui/core';
+import { Button, TextField } from '@material-ui/core';
 import styled from "styled-components";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from '@material-ui/core/Table';
@@ -55,12 +55,22 @@ const useStyles = makeStyles((theme) => ({
 function getResultStringPromise(state) {
     return new Promise(resolve => {
        setTimeout(() => {
+           const result = [];
            let realInput = state.inputString;
+           let inputStr = realInput.split('\n');
            if (state.replace && state.replaceWith) {
-               let index = parseInt(state.replace, 10);
-               realInput = realInput.substr(0, index) + state.replaceWith + realInput.substr(index + state.replaceWith.length);
+               let index = parseInt(state.replace, 10) - 1;
+               inputStr = inputStr.map(str => {
+                   if (index < str.length) {
+                       return str.substr(0, index) + state.replaceWith + str.substr(index + state.replaceWith.length);
+                   }
+                   return str;
+               });
            }
-           resolve(generateResult(realInput, parseInt(state.length,10), parseInt(state.jump, 10)));
+           inputStr.forEach(str => {
+               result.push.apply(result, generateResult(str, parseInt(state.length,10), parseInt(state.jump, 10)));
+           });
+           resolve(result);
        });
     });
 }
@@ -87,14 +97,24 @@ function App() {
     };
 
     const exportResult = () => {
-        const filePath = dialog.showSaveDialogSync();
+        const now = new Date();
+        const filePath = dialog.showSaveDialogSync({
+            showsTagField: false,
+            defaultPath: `output_${now.getFullYear()}${(now.getMonth() + 1).toString().padStart(2, '0')}${now.getDate().toString().padStart(2, '0')}`,
+            filters: [
+                {
+                    name: 'csv',
+                    extensions: ['csv']
+                }
+            ]
+        });
         if (!filePath) {
             return;
         }
         const csvWriter = createCsvWriter({
             path: filePath,
             header: [
-                {id: 'no', title: 'NO.'},
+                {id: 'no', title: 'No.'},
                 {id: 'output', title: 'Output'},
                 {id: 'batch', title: 'BatchId'}
             ]
@@ -175,8 +195,26 @@ function App() {
                         />
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <StyledTextField label="replace position" />
-                        <StyledTextField label="replace with" />
+                        <StyledTextField
+                            label="replace position"
+                            value={state.replace}
+                            onChange={(event) => {
+                                setState({
+                                    ...state,
+                                    replace: event.target.value
+                                });
+                            }}
+                        />
+                        <StyledTextField
+                            label="replace with"
+                            value={state.replaceWith}
+                            onChange={(event) => {
+                                setState({
+                                    ...state,
+                                    replaceWith: event.target.value
+                                });
+                            }}
+                        />
                     </div>
                     <div style={{
                         display: 'flex',
@@ -197,7 +235,11 @@ function App() {
                             variant="outlined"
                             size="small"
                             onClick={() => {
-                                setState(initialState);
+                                setState({
+                                    ...initialState,
+                                    length: 0,
+                                    jump: 0
+                                });
                             }}
                         >reset</Button>
                     </div>
