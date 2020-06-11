@@ -1,4 +1,9 @@
-export default function generateResult (inputString, resLength, jump) {
+export default function generateOverlappingResult(
+    inputString: string,
+    resLength: number,
+    jump: number,
+    isCyclic: boolean
+): Array<string> {
     const arr = inputString.split('');
     const len = arr.length;
     const res = [];
@@ -6,6 +11,9 @@ export default function generateResult (inputString, resLength, jump) {
     let cur, curStr;
     while (start < len) {
         cur = start;
+        if (!isCyclic && cur + resLength >= len) {
+            break;
+        }
         curStr = '';
         for (let i = 0; i < resLength; i++) {
             curStr += arr[cur];

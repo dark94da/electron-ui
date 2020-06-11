@@ -1,0 +1,20 @@
+{
+  "include": ["src"],
+  "compilerOptions": {
+    "jsx": "preserve",
+    "outDir": "./lib",
+    "allowJs": true,
+    // node_modules 依赖的最大搜索深度并加载 JavaScript 文件
+    "maxNodeModuleJsDepth": 1,
+    // 指定生成哪个模块系统代码
+    "module": "ES6",
+    "target": "ESNext",
+    "moduleResolution": "node",
+    "lib": ["dom", "es5", "es6"],
+    "sourceMap": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true
+  }
+}

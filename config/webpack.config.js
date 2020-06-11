@@ -382,6 +382,7 @@ module.exports = function(webpackEnv) {
                         },
                       },
                     },
+                    "styled-jsx/babel"
                   ],
                 ],
                 // This is a feature of `babel-loader` for webpack (not Babel itself).
