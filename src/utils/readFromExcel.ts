@@ -27,8 +27,12 @@ export default function (): {
             fileName: '',
         };
     }
+    let start = 0;
+    if (workSheetsFromFile[0].data && workSheetsFromFile[0].data.length > 0) {
+        start = 1;
+    }
     return {
-        inputArr: [...workSheetsFromFile[0].data],
+        inputArr: workSheetsFromFile[0].data.slice(start),
         fileName: path.basename(chosenFiles[0]),
     };
 }

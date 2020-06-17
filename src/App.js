@@ -53,10 +53,18 @@ function App() {
                     <Tab label="Scramble" {...a11yProps(3)} />
                 </Tabs>
             </AppBar>
-            {idx === 0 && <Overlapping />}
-            {idx === 1 && <Alias />}
-            {idx === 2 && <Truncation />}
-            {idx === 3 && <Scramble />}
+            <div style={{ display: idx === 0 ? 'block' : 'none' }}>
+                <Overlapping />
+            </div>
+            <div style={{ display: idx === 1 ? 'block' : 'none' }}>
+                <Alias />
+            </div>
+            <div style={{ display: idx === 2 ? 'block' : 'none' }}>
+                <Truncation />
+            </div>
+            <div style={{ display: idx === 3 ? 'block' : 'none' }}>
+                <Scramble />
+            </div>
         </div>
     );
 }

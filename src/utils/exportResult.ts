@@ -4,6 +4,7 @@ const createCsvWriter = window.require('csv-writer').createObjectCsvWriter;
 export interface ResItem {
     res: string;
     batchId: string;
+    dnaRes: string;
 }
 
 const exportResult = ({ prefix, resArr }: { prefix: string; resArr: ResItem[] }) => {
@@ -26,15 +27,15 @@ const exportResult = ({ prefix, resArr }: { prefix: string; resArr: ResItem[] })
     const csvWriter = createCsvWriter({
         path: filePath,
         header: [
-            { id: 'no', title: 'No.' },
+            { id: 'peptide', title: 'Peptide' },
+            { id: 'dna', title: 'DNA' },
             { id: 'batch', title: 'BatchId' },
-            { id: 'output', title: 'Output' },
         ],
     });
 
-    const records = resArr.map((resStr, idx) => ({
-        no: idx,
-        output: resStr.res,
+    const records = resArr.map((resStr) => ({
+        peptide: resStr.res,
+        dna: resStr.dnaRes,
         batch: resStr.batchId,
     }));
 

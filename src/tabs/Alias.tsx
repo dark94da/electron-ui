@@ -33,6 +33,7 @@ const StyledTextField = styled(TextField)`
 interface StateProps {
     inputString: string;
     replaceCh: string;
+    replaceDNA: string;
     batchId: string;
     currentResult: Array<ResItem>;
     stagingResult: Array<ResItem>;
@@ -42,6 +43,7 @@ interface StateProps {
 const initialState = {
     inputString: '',
     replaceCh: '',
+    replaceDNA: '',
     batchId: '',
     currentResult: [],
     stagingResult: [],
@@ -55,16 +57,26 @@ function Alias() {
     useStagingLoader(StorageNameEnum.Alias, setState);
 
     const getResult = () => {
-        const result: string[] = [];
+        const result: ResItem[] = [];
         state.inputString.split('\n').forEach((str) => {
-            result.push.apply(result, generateAliasResult(str, state.replaceCh));
+            const [pepStr = '', dnaStr = '', batchId] = str.split(',');
+            const { pepStrArr, dnaStrArr } = generateAliasResult(
+                pepStr,
+                dnaStr,
+                state.replaceCh,
+                state.replaceDNA
+            );
+            for (let i = 0; i < pepStrArr.length; i++) {
+                result.push({
+                    res: pepStrArr[i],
+                    dnaRes: dnaStrArr[i],
+                    batchId: batchId || state.batchId,
+                });
+            }
         });
         setState({
             ...state,
-            currentResult: result.map((res) => ({
-                res: res,
-                batchId: state.batchId,
-            })),
+            currentResult: result,
         });
     };
 
@@ -198,7 +210,7 @@ function Alias() {
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
                         <StyledTextField
                             required
-                            label="replace with"
+                            label="Peptide replacement"
                             value={state.replaceCh || ''}
                             onChange={(event) => {
                                 setState({
@@ -209,6 +221,18 @@ function Alias() {
                         />
                         <StyledTextField
                             required
+                            label="DNA replacement"
+                            value={state.replaceDNA || ''}
+                            onChange={(event) => {
+                                setState({
+                                    ...state,
+                                    replaceDNA: event.target.value,
+                                });
+                            }}
+                        />
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <StyledTextField
                             label="batch id"
                             value={state.batchId}
                             onChange={(event) => {
@@ -262,7 +286,8 @@ function Alias() {
                             <TableHead>
                                 <TableRow>
                                     <TableCell align="left">No.</TableCell>
-                                    <TableCell align="right">Result String</TableCell>
+                                    <TableCell align="right">Peptide</TableCell>
+                                    <TableCell align="right">DNA</TableCell>
                                     <TableCell align="right">Batch ID</TableCell>
                                 </TableRow>
                             </TableHead>
@@ -271,6 +296,7 @@ function Alias() {
                                     <TableRow key={idx}>
                                         <TableCell align="left">{idx + 1}</TableCell>
                                         <TableCell align="right">{res.res}</TableCell>
+                                        <TableCell align="right">{res.dnaRes}</TableCell>
                                         <TableCell align="right">{res.batchId}</TableCell>
                                     </TableRow>
                                 ))}
@@ -302,7 +328,8 @@ function Alias() {
                             <TableHead>
                                 <TableRow>
                                     <TableCell align="left">No.</TableCell>
-                                    <TableCell align="right">Result String</TableCell>
+                                    <TableCell align="right">Peptide</TableCell>
+                                    <TableCell align="right">DNA</TableCell>
                                     <TableCell align="right">Batch ID</TableCell>
                                 </TableRow>
                             </TableHead>
@@ -311,6 +338,7 @@ function Alias() {
                                     <TableRow key={idx}>
                                         <TableCell align="left">{idx + 1}</TableCell>
                                         <TableCell align="right">{res.res}</TableCell>
+                                        <TableCell align="right">{res.dnaRes}</TableCell>
                                         <TableCell align="right">{res.batchId}</TableCell>
                                     </TableRow>
                                 ))}
