@@ -7,11 +7,17 @@ export default function (
     pepStrArr: Array<string>;
     dnaStrArr: Array<string>;
 } {
-    const res = [];
-    const dnaRes = [];
+    const res: string[] = [];
+    const dnaRes: string[] = [];
+    if (!(len > 0)) {
+        return {
+            pepStrArr: res,
+            dnaStrArr: dnaRes,
+        };
+    }
     if (fromTail) {
         let curEnd = pepStr.length;
-        while (curEnd >= len) {
+        while (curEnd > len) {
             res.push(pepStr.slice(0, curEnd - len));
             dnaRes.push(dnaStr.slice(0, (curEnd - len) * 3));
             curEnd -= len;

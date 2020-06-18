@@ -17,6 +17,7 @@ import StorageNameEnum from '../enums/StorageNameEnum';
 import stagingUtils from '../utils/stagingUtils';
 import useStagingLoader from '../hooks/useStagingLoader';
 import readFromExcel from '../utils/readFromExcel';
+import validateInputData from '../utils/validateInputData';
 
 // language=SCSS
 const StyledTextField = styled(TextField)`
@@ -62,6 +63,9 @@ function Overlapping() {
         const result: ResItem[] = [];
         state.inputString.split('\n').forEach((str) => {
             const [pepStr = '', dnaStr = '', batchId] = str.split(',');
+            if (!validateInputData.checkPepStrAndDnaStr(pepStr, dnaStr)) {
+                return;
+            }
             const { pepStrArr, dnaStrArr } = generateOverlappingResult(
                 pepStr,
                 dnaStr,

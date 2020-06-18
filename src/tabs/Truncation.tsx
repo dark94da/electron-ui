@@ -19,6 +19,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import useStagingLoader from '../hooks/useStagingLoader';
 import readFromExcel from '../utils/readFromExcel';
 import stagingUtils from '../utils/stagingUtils';
+import validateInputData from '../utils/validateInputData';
 
 interface TruncationProps {}
 
@@ -64,6 +65,9 @@ function Truncation() {
         const result: ResItem[] = [];
         state.inputString.split('\n').forEach((str) => {
             const [pepStr = '', dnaStr = '', batchId] = str.split(',');
+            if (!validateInputData.checkPepStrAndDnaStr(pepStr, dnaStr)) {
+                return;
+            }
             const { pepStrArr, dnaStrArr } = generateTruncationResult(
                 pepStr,
                 dnaStr,
